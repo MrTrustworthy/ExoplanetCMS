@@ -38,4 +38,8 @@ function Animation() {
 
     }.bind(this);
 
+    this.shift = function(direction){
+        this.scene.rotateX(direction * 0.1);
+    }
+
 }

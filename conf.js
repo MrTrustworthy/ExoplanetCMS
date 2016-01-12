@@ -10,6 +10,7 @@ BODY = {
     color: 0xff00ff,
     size: 120,
     speed: 0.1,
+    segments: 16,
     children: [
         {
             start_x: 450,
@@ -19,6 +20,7 @@ BODY = {
             color: 0xff00ff,
             size: 40,
             speed: 0.02,
+            segments: 8,
             children: [
                 {
                     start_x: 650,
@@ -28,6 +30,7 @@ BODY = {
                     color: 0xff00ff,
                     size: 20,
                     speed: 0.1,
+                    segments: 5,
                     children: []
                 }
             ]
