@@ -3,14 +3,15 @@
  */
 
 
-function Circle(radius, speed) {
+function Circle(radius, speed, current) {
 
-    this.current = 0;
     this.radius = radius;
     this.speed = speed || 0.01;
+    this.current = current || 0;
 
-    this.get_next = function () {
-        this.current += this.speed * window.GLOBAL_SPEED.val;
+    this.get_next = function (val) {
+        if(val === undefined) val = this.speed * window.GLOBAL_SPEED.val;
+        this.current += val;
 
         return {
             x: this.radius * Math.cos(this.current),

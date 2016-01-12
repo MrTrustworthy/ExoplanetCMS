@@ -15,10 +15,15 @@ function Animation() {
 
     this.renderer = new THREE.WebGLRenderer(this.context);
     this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.setClearColor(0x002244, 1);
+
+    this.directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+    this.directionalLight.position.set(2, 1, 2 + Math.PI/2);
+    this.scene.add(this.directionalLight);
 
 
-    this.scene.rotateX(-1);
-    THREE.EventDispatcher.prototype.apply(this);
+    //this.scene.rotateX(-1);
+    THREE.EventDispatcher.prototype.apply(this.scene);
 
     this.add = function (obj) {
         this.scene.add(obj.mesh);
@@ -29,17 +34,17 @@ function Animation() {
 
         requestAnimationFrame(this.start);
         this.scene.children.forEach(function (child) {
-            child.object.move();
+            if(child instanceof THREE.Mesh) child.object.move();
         });
 
-        this.dispatchEvent({type: "scene_updated"});
+        this.scene.dispatchEvent({type: "scene_updated"});
 
         this.renderer.render(this.scene, this.cam.camera);
 
     }.bind(this);
 
-    this.shift = function(direction){
-        this.scene.rotateX(direction * 0.1);
+    this.shift = function (direction) {
+        this.cam.scroll(direction);
     }
 
 }
