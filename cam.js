@@ -24,9 +24,11 @@ var Cam = function () {
  */
 Cam.prototype.scroll = function (amount) {
 
+    amount = amount * -1;
+
     // avoid gimbal lock problems
     // also, we don't need to scroll that far, so why not just limit it
-    if (this.circle.current >= 1.5 && amount > 0) return;
+    if (this.circle.current >= 0 && amount > 0) return;
     else if (this.circle.current <= -1.5 && amount < 0) return;
     else if (this.is_tweening || this.is_in_close_view) return;
 

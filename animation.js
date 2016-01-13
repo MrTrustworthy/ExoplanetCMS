@@ -15,36 +15,72 @@ function Animation() {
 
     this.renderer = new THREE.WebGLRenderer(this.context);
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.renderer.setClearColor(0x002244, 1);
+    //this.renderer.setClearColor(0x002244, 1);
 
     this.directionalLight = new THREE.DirectionalLight(0xffffff, 2);
-    this.directionalLight.position.set(2, 1, 2 + Math.PI/2);
+    this.directionalLight.position.set(2, 1, 2 + Math.PI / 2);
     this.scene.add(this.directionalLight);
+
+    this.skybox = null;
+
+    var handle_load = function (texture) {
+
+        var sphere = new THREE.Mesh(
+            new THREE.SphereGeometry(1500, 32, 32),
+            new THREE.MeshBasicMaterial({
+                map: texture,
+                specularMap: texture,
+                reflectivity: 100
+            })
+        );
+        sphere.scale.x = -1;
+        sphere.scale.y = -1;
+        sphere.scale.z = -1;
+
+
+        sphere.rotateX(Math.PI / 4);
+
+        sphere.rotateY(-Math.PI / 2);
+
+        this.skybox = sphere;
+
+        this.scene.add(sphere);
+    }.bind(this);
+
+
+    var loader = new THREE.TextureLoader();
+
+
+    loader.load(
+        "graphics/skybox.jpg",
+        handle_load,
+        handle_load,
+        handle_load
+    );
 
 
     //this.scene.rotateX(-1);
     THREE.EventDispatcher.prototype.apply(this.scene);
 
-    this.add = function (obj) {
-        this.scene.add(obj.mesh);
-    };
+};
 
 
-    this.start = function start() {
+Animation.prototype.add = function (obj) {
+    this.scene.add(obj.mesh);
+};
 
-        requestAnimationFrame(this.start);
-        this.scene.children.forEach(function (child) {
-            if(child instanceof THREE.Mesh) child.object.move();
-        });
 
-        this.scene.dispatchEvent({type: "scene_updated"});
+Animation.prototype.start = function start() {
 
-        this.renderer.render(this.scene, this.cam.camera);
+    requestAnimationFrame(this.start.bind(this));
+    this.scene.children.forEach(function (child) {
+        if (child.userData instanceof Body) child.userData.move();
+    });
 
-    }.bind(this);
+    this.scene.dispatchEvent({type: "scene_updated"});
 
-    this.shift = function (direction) {
-        this.cam.scroll(direction);
-    }
+    this.renderer.render(this.scene, this.cam.camera);
 
-}
+};
+
+

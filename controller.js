@@ -30,13 +30,15 @@ window.ii = 0;
 Controller.prototype.handle_click = function (evt) {
 
 
-    // aehmmm.... gotta clean this up
-    var objs = this.get_objects(evt);
+    //// aehmmm.... gotta clean this up
+    //var objs = this.get_objects(evt);
+    //
+    //var obj = objs[0];
+    //while (!!obj && !(obj.object === undefined)) {
+    //    obj = obj.object;
+    //}
 
-    var obj = objs[0];
-    while (!!obj && !(obj.object === undefined)) {
-        obj = obj.object;
-    }
+    var obj = this.get_object(evt);
     if (obj){
         if(this.current_selected) this.current_selected.hide_dialog();
         this.select_object(obj);
@@ -89,11 +91,11 @@ Controller.prototype.handle_rightclick = function () {
  */
 Controller.prototype.handle_move = function (evt) {
     this.current_mouse_move = evt;
-    var objects = this.get_objects(evt);
+
 
     if (GLOBAL_SPEED.locked) return;
 
-    if (!objects[0]) {
+    if (!this.get_object(evt)) {
         GLOBAL_SPEED.val = GLOBAL_SPEED.max;
     } else {
         GLOBAL_SPEED.val = GLOBAL_SPEED.min;
@@ -108,7 +110,7 @@ Controller.prototype.handle_move = function (evt) {
  */
 Controller.prototype.handle_scroll = function (evt) {
     var val = evt.deltaY > 0 ? 1 : -1;
-    this.animation.shift(val);
+    this.animation.cam.scroll(val);
 };
 
 
@@ -125,7 +127,7 @@ Controller.prototype.handle_update = function () {
  * @param event
  * @returns {*}
  */
-Controller.prototype.get_objects = function (event) {
+Controller.prototype.get_object = function (event) {
     var raycaster = new THREE.Raycaster();
     var mouse = new THREE.Vector2();
 
@@ -133,7 +135,20 @@ Controller.prototype.get_objects = function (event) {
     mouse.y = -( event.clientY / this.animation.renderer.domElement.height ) * 2 + 1;
     raycaster.setFromCamera(mouse, this.animation.cam.camera);
 
-    return raycaster.intersectObjects(this.animation.scene.children);
+    var objs = raycaster.intersectObjects(this.animation.scene.children);
+
+    var obj = objs[0];
+
+    if(!obj) return null;
+
+    while(obj.object){
+        obj = obj.object;
+    }
+
+    if(obj.userData && obj.userData instanceof Body) return obj.userData;
+    else return null;
+
+
 };
 
 

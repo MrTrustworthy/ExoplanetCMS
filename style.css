@@ -24,6 +24,12 @@ dialog {
     display: block;
     overflow: hidden;
 
+    background-color: #849fd0;
+
+    text-align: center;
+    font-size: 150%;
+    font-family: 'Ubuntu Condensed', sans-serif;
+
     opacity: 0;
     transition: opacity 1s;
 }

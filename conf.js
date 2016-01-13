@@ -5,9 +5,9 @@
 BODY = {
     start_x: 0,
     start_y: 0,
-    rotate_x: 0.01,
-    rotate_y: 0.02,
-    color: 0xff00ff,
+    rotate_x: 0,
+    rotate_y: 0.01,
+    color: 0xff2a00,
     size: 120,
     speed: 0.1,
     segments: 16,
@@ -16,9 +16,9 @@ BODY = {
         {
             start_x: 350,
             start_y: 0,
-            rotate_x: 0.02,
-            rotate_y: 0.06,
-            color: 0xff00ff,
+            rotate_x: 0.07,
+            rotate_y: -0.08,
+            color: 0x53ff8f,
             size: 40,
             speed: 0.02,
             segments: 8,
@@ -29,7 +29,7 @@ BODY = {
                     start_y: 0,
                     rotate_x: -0.1,
                     rotate_y: -0.06,
-                    color: 0xff00ff,
+                    color: 0xe8b60c,
                     size: 20,
                     speed: 0.1,
                     segments: 5,
@@ -41,7 +41,7 @@ BODY = {
                     start_y: 0,
                     rotate_x: 0.1,
                     rotate_y: 0.23,
-                    color: 0xff00ff,
+                    color: 0xb27b12,
                     size: 20,
                     speed: 0.1,
                     segments: 5,
@@ -59,7 +59,7 @@ BODY = {
 GLOBAL_SPEED = {
     val: 0.3,
     max: 0.3,
-    min: 0.01,
+    min: 0.0075,
     stop: 0,
     locked: false
 };

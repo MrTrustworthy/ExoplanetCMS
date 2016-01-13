@@ -8,6 +8,10 @@ var Dialog = function (content) {
 
     this.dlg.innerHTML = content;
 
+    this.dlg.oncontextmenu = function () {
+        return false;
+    };
+
 
 };
 

@@ -19,15 +19,18 @@ function Body(info, parent) {
     this.material = new THREE.MeshLambertMaterial(
         {
             color: info.color,
-            wireframe: true
+            wireframe: true,
+            wireframeLinewidth: Math.ceil(info.size/100)*10
         }
     );
 
     this.mesh = new THREE.Mesh(this.geometry, this.material);
-    this.mesh.object = this;
+    this.mesh.userData = this;
 
+    // startposition and rotation;
     this.mesh.position.x = info.start_x;
     this.mesh.position.y = info.start_y;
+    this.mesh.rotateX(Math.PI/2);
 
     this.dialog = new Dialog(info.content);
 
