@@ -30,10 +30,7 @@ window.ii = 0;
 Controller.prototype.handle_click = function (evt) {
 
     var obj = this.get_object(evt);
-    if (obj){
-        if(this.current_selected) this.current_selected.hide_dialog();
-        this.select_object(obj);
-    }
+    if (obj) this.select_object(obj);
     else this.cancel_selection();
 };
 
@@ -45,12 +42,15 @@ Controller.prototype.select_object = function (object) {
 
     var can_tween = this.animation.cam.lock_on(object, this.animation.scene);
 
-    if (can_tween) {
-        GLOBAL_SPEED.val = GLOBAL_SPEED.stop;
-        GLOBAL_SPEED.locked = true;
-        this.current_selected = object;
-        object.show_dialog();
-    }
+    if (!can_tween) return;
+
+    if (this.current_selected) this.current_selected.hide_dialog();
+
+    GLOBAL_SPEED.val = GLOBAL_SPEED.stop;
+    GLOBAL_SPEED.locked = true;
+    this.current_selected = object;
+    object.show_dialog();
+
 };
 
 /**
@@ -132,13 +132,13 @@ Controller.prototype.get_object = function (event) {
 
     var obj = objs[0];
 
-    if(!obj) return null;
+    if (!obj) return null;
 
-    while(obj.object){
+    while (obj.object) {
         obj = obj.object;
     }
 
-    if(obj.userData && obj.userData instanceof Body) return obj.userData;
+    if (obj.userData && obj.userData instanceof Body) return obj.userData;
     else return null;
 
 

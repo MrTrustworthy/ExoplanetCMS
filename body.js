@@ -3,8 +3,12 @@
  */
 
 
-
-
+/**
+ *
+ * @param info
+ * @param parent
+ * @constructor
+ */
 function Body(info, parent) {
 
     this.info = info;
@@ -20,7 +24,7 @@ function Body(info, parent) {
         {
             color: info.color,
             wireframe: true,
-            wireframeLinewidth: Math.ceil(info.size/100)*10
+            wireframeLinewidth: Math.ceil(info.size / 100) * 10
         }
     );
 
@@ -30,9 +34,14 @@ function Body(info, parent) {
     // startposition and rotation;
     this.mesh.position.x = info.start_x;
     this.mesh.position.y = info.start_y;
-    this.mesh.rotateX(Math.PI/2);
+    this.mesh.rotateX(Math.PI / 2);
 
-    this.dialog = new Dialog(info.content);
+    // generate on demand
+    // also avoids circular dependencies
+    this.dialog = null;
+
+    // backref on info allows us to traverse the solar system
+    this.info.backref = this;
 
 
     if (this.parent) {
@@ -45,12 +54,17 @@ function Body(info, parent) {
     }
 
 }
-
+/**
+ *
+ */
 Body.prototype.show_dialog = function () {
+    if (!this.dialog) this.dialog = new Dialog(this);
     this.dialog.show();
 };
 
-
+/**
+ *
+ */
 Body.prototype.hide_dialog = function () {
     this.dialog.close();
 
