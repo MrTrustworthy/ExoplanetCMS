@@ -29,15 +29,6 @@ window.ii = 0;
  */
 Controller.prototype.handle_click = function (evt) {
 
-
-    //// aehmmm.... gotta clean this up
-    //var objs = this.get_objects(evt);
-    //
-    //var obj = objs[0];
-    //while (!!obj && !(obj.object === undefined)) {
-    //    obj = obj.object;
-    //}
-
     var obj = this.get_object(evt);
     if (obj){
         if(this.current_selected) this.current_selected.hide_dialog();
@@ -97,8 +88,10 @@ Controller.prototype.handle_move = function (evt) {
 
     if (!this.get_object(evt)) {
         GLOBAL_SPEED.val = GLOBAL_SPEED.max;
+        this.animation.canvas.style.cursor = "";
     } else {
         GLOBAL_SPEED.val = GLOBAL_SPEED.min;
+        this.animation.canvas.style.cursor = "pointer";
     }
 
 };

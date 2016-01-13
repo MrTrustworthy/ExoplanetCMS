@@ -9,6 +9,7 @@ var Dialog = function (content) {
     this.dlg.innerHTML = content;
 
     this.dlg.oncontextmenu = function () {
+        window.controller.cancel_selection();
         return false;
     };
 
