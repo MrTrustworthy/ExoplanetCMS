@@ -23,30 +23,50 @@ var Dialog = function (body) {
 
 Dialog.prototype.generate_content = function () {
 
+    var container = document.createElement("div");
+    container.className = "dialog_container";
+    this.dlg.appendChild(container);
 
+
+    // create the 3 main containers and fill them
+    var dialog_content_container = document.createElement("div");
+    dialog_content_container.className = "dialog_content_container";
+    container.appendChild(dialog_content_container);
+
+    var dialog_back_container = document.createElement("div");
+    dialog_back_container.className = "dialog_back_container";
+    container.appendChild(dialog_back_container);
+
+    var dialog_forward_container = document.createElement("div");
+    dialog_forward_container.className = "dialog_forward_container";
+    container.appendChild(dialog_forward_container);
+
+
+    // generate center elements
     var header = document.createElement("h1");
     header.innerHTML = this.body.info.title;
-    this.dlg.appendChild(header);
+    dialog_content_container.appendChild(header);
 
     var content = document.createElement("div");
     content.innerHTML = this.body.info.content;
-    this.dlg.appendChild(content);
+    dialog_content_container.appendChild(content);
 
-
+    //generate back arrows
     if (this.body.parent) {
-        var button = document.createElement("button");
-        button.innerHTML = "Back to " + this.body.info.title;
-        button.onclick = window.controller.select_object.bind(window.controller, this.body.parent);
-        this.dlg.appendChild(button);
+        dialog_back_container.innerHTML = this.body.parent.info.title;
+        dialog_back_container.onclick = window.controller.select_object.bind(window.controller, this.body.parent);
+    } else {
+        dialog_back_container.innerHTML = "k";
+        dialog_back_container.onclick = window.controller.cancel_selection.bind(window.controller);
     }
 
+    //generate forward arrows
     this.body.info.children.forEach(function (child) {
         button = document.createElement("button");
         button.innerHTML = "Go to " + child.title;
         button.onclick = window.controller.select_object.bind(window.controller, child.backref);
-        this.dlg.appendChild(button);
+        dialog_forward_container.appendChild(button);
     }.bind(this));
-
 
 };
 
