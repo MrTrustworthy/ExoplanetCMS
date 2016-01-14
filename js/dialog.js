@@ -2,10 +2,7 @@
  * Created by MrTrustworthy on 12.01.2016.
  */
 
-var main_controller = require("js/main").controller;
-
-
-
+var Deferred = require("js/lib/mt-promise");
 /**
  *
  * @param content
@@ -14,7 +11,6 @@ var main_controller = require("js/main").controller;
 var Dialog = function (body) {
 
     this.body = body;
-
 
     var dialog_id = this.body.info.title.replace(/[^A-Z0-9]+/ig, "_");
 
@@ -25,23 +21,30 @@ var Dialog = function (body) {
 
     this.dlg = document.getElementById(dialog_id);
 
+    // cancel on rightclick
     this.dlg.oncontextmenu = function () {
-        main_controller.cancel_selection();
+        require("js/main").controller.cancel_selection();
         return false;
     };
 
 };
 
 
+Dialog.FADE_IN_TIME = 2; // in seconds - needs to be the same as the animation in the .css
+Dialog.FADE_OUT_TIME = 1;
 
 /**
  *
  */
 Dialog.prototype.show = function () {
-
+    var deferred = new Deferred();
     this.dlg.show();
     this.dlg.classList.remove("body_dialog_closed");
     this.dlg.classList.add("body_dialog_open");
+
+    setTimeout(deferred.resolve.bind(deferred), Dialog.FADE_IN_TIME * 1000);
+
+    return deferred.promise;
 };
 
 //
@@ -50,10 +53,14 @@ Dialog.prototype.show = function () {
  *
  */
 Dialog.prototype.close = function () {
-
+    var deferred = new Deferred();
     this.dlg.classList.remove("body_dialog_open");
     this.dlg.classList.add("body_dialog_closed");
-    window.setTimeout(this.dlg.close.bind(this.dlg), 1000);
+    window.setTimeout(function(){
+        this.dlg.close();
+        deferred.resolve();
+    }.bind(this), 1000);
+    return deferred.promise;
 };
 
 module.exports = Dialog;

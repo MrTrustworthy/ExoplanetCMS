@@ -64,14 +64,14 @@ function Body(info, parent) {
  */
 Body.prototype.show_dialog = function () {
     if (!this.dialog) this.dialog = new Dialog(this);
-    this.dialog.show();
+    return this.dialog.show();
 };
 
 /**
  *
  */
 Body.prototype.hide_dialog = function () {
-    this.dialog.close();
+    return this.dialog.close();
 
 };
 

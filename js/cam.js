@@ -4,6 +4,7 @@
 
 var THREE = require("js/lib/three");
 var Circle = require("js/circle");
+var Deferred = require("js/lib/mt-promise");
 
 /**
  *
@@ -54,25 +55,35 @@ Cam.prototype.scroll = function (amount) {
  */
 Cam.prototype.lock_on = function (object, scene) {
 
+    var deferred = new Deferred();
+
     if (this.is_tweening) {
         console.warn("#Cam: Can't start new movement, already tweening");
-        return false;
+        deferred.reject();
+        return deferred.promise;
     }
 
     this.new_view_target = object.mesh.position;
 
-    this.tween(
+    var p = this.tween(
         this.camera.position.clone(),
+
         new THREE.Vector3(
             object.mesh.position.x,
             object.mesh.position.y,
             object.info.size * 3
         ),
+
         scene
     );
-    this.is_in_close_view = true;
 
-    return true;
+    p.then(function () {
+        this.is_in_close_view = true;
+        deferred.resolve();
+    }.bind(this));
+
+
+    return deferred.promise;
 };
 
 
@@ -82,25 +93,35 @@ Cam.prototype.lock_on = function (object, scene) {
  * @returns {boolean}
  */
 Cam.prototype.remove_lock = function (scene) {
+
+    var deferred = new Deferred();
+
     if (this.is_tweening) {
         console.warn("#Cam: Can't start new movement, already tweening");
-        return false;
+        deferred.reject();
+        return deferred.promise;
     }
 
     this.new_view_target = this.ORIGIN;
     var old = this.circle.get_next(0);
 
 
-    this.tween(
+    var p = this.tween(
         this.camera.position.clone(),
         new THREE.Vector3(0, old.y, old.x),
         scene
     );
 
-    this.is_in_close_view = false;
+    p.then(function () {
+
+        this.is_in_close_view = false;
+        deferred.resolve();
+
+    }.bind(this));
 
 
-    return true;
+    return deferred.promise;
+
 };
 
 /**
@@ -110,6 +131,8 @@ Cam.prototype.remove_lock = function (scene) {
  * @param scene
  */
 Cam.prototype.tween = function (start, stop, scene) {
+
+    var deferred = new Deferred();
 
     var frames = 60 * 1;
     var i = 0;
@@ -142,7 +165,6 @@ Cam.prototype.tween = function (start, stop, scene) {
     );
 
 
-
     var move_tween_func = function () {
 
         i++;
@@ -167,11 +189,12 @@ Cam.prototype.tween = function (start, stop, scene) {
             this.current_view_target = this.new_view_target;
             this.new_view_target = null;
             this.is_tweening = false;
+            deferred.resolve();
         }
     }.bind(this);
 
     scene.addEventListener("scene_updated", move_tween_func);
-
+    return deferred.promise;
 
 };
 

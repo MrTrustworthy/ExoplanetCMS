@@ -24,13 +24,11 @@ dialog.body_dialog {
 
     border: none;
 
-    background-color: yellow;
-
     font-size: 150%;
     font-family: 'Ubuntu Condensed', sans-serif;
 
     overflow: hidden;
-scale(0)
+    scale(0)
 
 
 }
@@ -90,7 +88,7 @@ div.dialog_content_left {
     width: 25%;
     height: 100%;
     float: left;
-    background-color: red;
+    background: rgba(0,0,0,0.50);
 }
 
 div.dialog_content_middle {
@@ -108,7 +106,7 @@ div.dialog_content_right {
     width: 25%;
     height: 100%;
     float: left;
-    background-color: blue;
+    background: rgba(0,0,0,0.50);
 }
 
 

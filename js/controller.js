@@ -9,7 +9,7 @@ var Body = require("js/body");
 
 /**
  *
-  * @param animation
+ * @param animation
  * @constructor
  */
 var Controller = function (animation) {
@@ -48,16 +48,24 @@ Controller.prototype.handle_click = function (evt) {
  */
 Controller.prototype.select_object = function (object) {
 
-    var can_tween = this.animation.cam.lock_on(object, this.animation.scene);
+    var cam = this.animation.cam;
 
-    if (!can_tween) return;
+    if (cam.is_tweening) return;
 
-    if (this.current_selected) this.current_selected.hide_dialog();
 
-    GLOBAL_SPEED.val = GLOBAL_SPEED.stop;
-    GLOBAL_SPEED.locked = true;
-    this.current_selected = object;
-    object.show_dialog();
+    var perform_selection_func = function(){
+        GLOBAL_SPEED.val = GLOBAL_SPEED.stop;
+        GLOBAL_SPEED.locked = true;
+        this.current_selected = object;
+        cam.lock_on(object, this.animation.scene).then(object.show_dialog.bind(object));
+    }.bind(this);
+
+
+
+
+
+    if (this.current_selected) this.current_selected.hide_dialog().then(perform_selection_func);
+    else perform_selection_func();
 
 };
 
@@ -66,12 +74,22 @@ Controller.prototype.select_object = function (object) {
  */
 Controller.prototype.cancel_selection = function () {
 
-    if (this.current_selected && this.animation.cam.remove_lock(this.animation.scene)) {
+    var cam = this.animation.cam;
+
+    if (!this.current_selected || cam.is_tweening) return;
+
+    this.current_selected.hide_dialog().then(function(){
+
+        cam.remove_lock(this.animation.scene);
         GLOBAL_SPEED.val = GLOBAL_SPEED.max;
         GLOBAL_SPEED.locked = false;
-        this.current_selected.hide_dialog();
+
         this.current_selected = null;
-    }
+    }.bind(this));
+
+
+
+
 };
 
 
@@ -95,9 +113,9 @@ Controller.prototype.handle_move = function (evt) {
 
     this.animation.canvas.style.cursor = !!obj ? "pointer" : "";
 
-    if(GLOBAL_SPEED.locked) return;
+    if (GLOBAL_SPEED.locked) return;
 
-    if(!obj) GLOBAL_SPEED.val = GLOBAL_SPEED.max;
+    if (!obj) GLOBAL_SPEED.val = GLOBAL_SPEED.max;
     else GLOBAL_SPEED.val = GLOBAL_SPEED.min;
 
 };
