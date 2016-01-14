@@ -3,6 +3,11 @@
  */
 
 
+var THREE = require("js/lib/three");
+var Dialog = require("js/dialog");
+var Circle = require("js/circle");
+var GLOBAL_SPEED = require("js/conf").speed;
+
 /**
  *
  * @param info
@@ -86,7 +91,8 @@ Body.prototype.move = function () {
         })
     }
 
-    this.mesh.rotation.x += this.info.rotate_x * window.GLOBAL_SPEED.val;
-    this.mesh.rotation.y += this.info.rotate_y * window.GLOBAL_SPEED.val;
+    this.mesh.rotation.x += this.info.rotate_x * GLOBAL_SPEED.val;
+    this.mesh.rotation.y += this.info.rotate_y * GLOBAL_SPEED.val;
 };
 
+module.exports = Body;

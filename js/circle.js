@@ -2,6 +2,7 @@
  * Created by MrTrustworthy on 11.01.2016.
  */
 
+var GLOBAL_SPEED = require("js/conf").speed;
 
 function Circle(radius, speed, current) {
 
@@ -10,7 +11,7 @@ function Circle(radius, speed, current) {
     this.current = current || 0;
 
     this.get_next = function (val) {
-        if(val === undefined) val = this.speed * window.GLOBAL_SPEED.val;
+        if(val === undefined) val = this.speed * GLOBAL_SPEED.val;
         this.current += val;
 
         return {
@@ -21,3 +22,5 @@ function Circle(radius, speed, current) {
 
 
 }
+
+module.exports = Circle;

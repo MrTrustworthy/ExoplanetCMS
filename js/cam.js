@@ -2,6 +2,13 @@
  * Created by MrTrustworthy on 11.01.2016.
  */
 
+var THREE = require("js/lib/three");
+var Circle = require("js/circle");
+
+/**
+ *
+ * @constructor
+ */
 var Cam = function () {
 
     this.is_tweening = false;
@@ -167,3 +174,5 @@ Cam.prototype.tween = function (start, stop, scene) {
 
 
 };
+
+module.exports = Cam;

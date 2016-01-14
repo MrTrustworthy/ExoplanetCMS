@@ -1,6 +1,11 @@
 /**
  * Created by MrTrustworthy on 12.01.2016.
  */
+
+var main_controller = require("js/main").controller;
+
+
+
 /**
  *
  * @param content
@@ -21,7 +26,7 @@ var Dialog = function (body) {
     this.dlg = document.getElementById(dialog_id);
 
     this.dlg.oncontextmenu = function () {
-        window.controller.cancel_selection();
+        main_controller.cancel_selection();
         return false;
     };
 
@@ -51,6 +56,7 @@ Dialog.prototype.close = function () {
     window.setTimeout(this.dlg.close.bind(this.dlg), 1000);
 };
 
+module.exports = Dialog;
 
 
 //Dialog.prototype.generate_content = function () {

@@ -3,6 +3,15 @@
  */
 
 
+var GLOBAL_SPEED = require("js/conf").speed;
+var THREE = require("js/lib/three");
+var Body = require("js/body");
+
+/**
+ *
+  * @param animation
+ * @constructor
+ */
 var Controller = function (animation) {
 
     this.animation = animation;
@@ -21,7 +30,6 @@ var Controller = function (animation) {
 
 };
 
-window.ii = 0;
 
 /**
  *
@@ -83,16 +91,14 @@ Controller.prototype.handle_rightclick = function () {
 Controller.prototype.handle_move = function (evt) {
     this.current_mouse_move = evt;
 
+    var obj = this.get_object(evt);
 
-    if (GLOBAL_SPEED.locked) return;
+    this.animation.canvas.style.cursor = !!obj ? "pointer" : "";
 
-    if (!this.get_object(evt)) {
-        GLOBAL_SPEED.val = GLOBAL_SPEED.max;
-        this.animation.canvas.style.cursor = "";
-    } else {
-        GLOBAL_SPEED.val = GLOBAL_SPEED.min;
-        this.animation.canvas.style.cursor = "pointer";
-    }
+    if(GLOBAL_SPEED.locked) return;
+
+    if(!obj) GLOBAL_SPEED.val = GLOBAL_SPEED.max;
+    else GLOBAL_SPEED.val = GLOBAL_SPEED.min;
 
 };
 
@@ -144,4 +150,4 @@ Controller.prototype.get_object = function (event) {
 
 };
 
-
+module.exports = Controller;

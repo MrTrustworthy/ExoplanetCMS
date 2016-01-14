@@ -2,7 +2,7 @@
  * Created by MrTrustworthy on 11.01.2016.
  */
 
-BODY = {
+element_configuration = {
     start_x: 0,
     start_y: 0,
     rotate_x: 0,
@@ -128,4 +128,9 @@ GLOBAL_SPEED = {
     min: 0.0075,
     stop: 0,
     locked: false
+};
+
+module.exports = {
+    elements: element_configuration,
+    speed: GLOBAL_SPEED
 };

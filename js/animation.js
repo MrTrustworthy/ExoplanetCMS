@@ -2,7 +2,9 @@
  * Created by MrTrustworthy on 11.01.2016.
  */
 
-
+var THREE = require("js/lib/three");
+var Cam = require("js/cam");
+var Body = require("js/body");
 
 function Animation() {
 
@@ -62,7 +64,7 @@ function Animation() {
     //this.scene.rotateX(-1);
     THREE.EventDispatcher.prototype.apply(this.scene);
 
-};
+}
 
 
 Animation.prototype.add = function (obj) {
@@ -84,3 +86,4 @@ Animation.prototype.start = function start() {
 };
 
 
+module.exports = Animation;
