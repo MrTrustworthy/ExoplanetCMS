@@ -24,8 +24,9 @@ dialog.body_dialog {
 
     border: none;
 
-    font-size: 150%;
-    font-family: 'Ubuntu Condensed', sans-serif;
+    background-color: transparent;
+
+
 
     overflow: hidden;
     scale(0)
@@ -85,28 +86,35 @@ dialog.body_dialog_closed {
 div.dialog_content_left {
     top: 0;
     left: 0;
-    width: 25%;
+    width: 15%;
     height: 100%;
     float: left;
-    background: rgba(0,0,0,0.50);
+    background-color: transparent;
+
 }
 
 div.dialog_content_middle {
     top: 0;
-    left: 25%;
-    width: 50%;
+    left: 15%;
+    width: 70%;
     height: 100%;
     float: left;
-    background-color: green;
+    background-color: cornflowerblue;
+
+
+    font-size: 150%;
+    font-family: 'Ubuntu Condensed', sans-serif;
+    text-align: center;
+
 }
 
 div.dialog_content_right {
     top: 0;
-    left: 75%;
-    width: 25%;
+    left: 85%;
+    width: 15%;
     height: 100%;
     float: left;
-    background: rgba(0,0,0,0.50);
+    background-color: transparent;
 }
 
 
