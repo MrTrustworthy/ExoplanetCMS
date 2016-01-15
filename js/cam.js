@@ -26,7 +26,7 @@ var Cam = function () {
     this.current_view_target = this.ORIGIN;
     this.new_view_target = null;
 
-    this.scroll(0);
+    this.scroll(2.25);
 
 };
 

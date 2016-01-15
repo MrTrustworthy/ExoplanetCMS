@@ -10,7 +10,6 @@
  */
 var textures = {
     skybox: "skybox",
-    text_texture: "text_ure",
     donjon_1: "donjon_1",
     donjon_2: "donjon_2",
     donjon_4: "donjon_4",
