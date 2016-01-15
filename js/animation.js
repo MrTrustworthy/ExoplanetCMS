@@ -29,10 +29,10 @@ function Animation() {
 
     this.skybox = null;
 
-    var handle_load = function (texture) {
+    var handle_load_func = function (texture) {
 
         var sphere = new THREE.Mesh(
-            new THREE.SphereGeometry(1500, 32, 32),
+            new THREE.SphereGeometry(2500, 32, 32),
             new THREE.MeshBasicMaterial({
                 map: texture,
                 specularMap: texture,
@@ -59,9 +59,9 @@ function Animation() {
 
     loader.load(
         "graphics/skybox.jpg",
-        handle_load,
-        handle_load,
-        handle_load
+        handle_load_func,
+        handle_load_func,
+        handle_load_func
     );
 
 
