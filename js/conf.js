@@ -2,7 +2,20 @@
  * Created by MrTrustworthy on 11.01.2016.
  */
 
-element_configuration = {
+/**
+ * All textures entered here must exist as <filename>.jpg and <filename>_bump.jpg
+ * in graphics/textures/
+ * skybox texture is mandatory, the other ones map to the respective element_configuration texture name
+  * @type {{}}
+ */
+var textures = {
+    skybox: "skybox",
+    mars: "mars",
+    text_texture: "text_ure"
+};
+
+
+var element_configuration = {
     start_x: 0,
     start_y: 0,
     rotate_x: 0,
@@ -12,6 +25,7 @@ element_configuration = {
     speed: 0.1,
     segments: 16,
     backref: null,
+    texture: "mars",
     title: "Home",
     content: "home_content",
     children: [
@@ -25,6 +39,7 @@ element_configuration = {
             speed: 0.05,
             segments: 8,
             backref: null,
+            texture: "mars",
             title: "About",
             content: "about_content",
             start_time: 5,
@@ -39,6 +54,7 @@ element_configuration = {
                     speed: -0.03,
                     segments: 5,
                     backref: null,
+                    texture: "mars",
                     title: "Contact",
                     content: "contact_content",
                     start_time: 0,
@@ -56,6 +72,7 @@ element_configuration = {
             speed: 0.02,
             segments: 12,
             backref: null,
+            texture: "mars",
             title: "Projects",
             content: "projects_content",
             start_time: 1,
@@ -70,6 +87,7 @@ element_configuration = {
                     speed: -0.175,
                     segments: 5,
                     backref: null,
+                    texture: "mars",
                     title: "Star CMS",
                     content: "content_starcms",
                     start_time: 5,
@@ -85,6 +103,7 @@ element_configuration = {
                     speed: 0.05,
                     segments: 5,
                     backref: null,
+                    texture: "mars",
                     title: "Github",
                     content: "content_github",
                     start_time: 0,
@@ -102,6 +121,7 @@ element_configuration = {
             speed: 0.01,
             segments: 12,
             backref: null,
+            texture: "mars",
             title: "Technologies",
             content: "technologies_content",
             start_time: 3,
@@ -116,6 +136,7 @@ element_configuration = {
                     speed: -0.125,
                     segments: 5,
                     backref: null,
+                    texture: "mars",
                     title: "Javascript",
                     content: "javascript_content",
                     start_time: 0,
@@ -131,6 +152,7 @@ element_configuration = {
                     speed: -0.125,
                     segments: 5,
                     backref: null,
+                    texture: "mars",
                     title: "Python",
                     content: "python_content",
                     start_time: 3,
@@ -146,6 +168,7 @@ element_configuration = {
                     speed: 0.04,
                     segments: 5,
                     backref: null,
+                    texture: "mars",
                     title: "Frameworks",
                     content: "frameworks_content",
                     start_time: 1.1,
@@ -158,7 +181,7 @@ element_configuration = {
 };
 
 
-GLOBAL_SPEED = {
+var GLOBAL_SPEED = {
     val: 0.3,
     max: 0.3,
     min: 0.0075,
@@ -168,5 +191,6 @@ GLOBAL_SPEED = {
 
 module.exports = {
     elements: element_configuration,
-    speed: GLOBAL_SPEED
+    speed: GLOBAL_SPEED,
+    textures: textures
 };

@@ -5,10 +5,15 @@
 var THREE = require("js/lib/three");
 var Cam = require("js/cam");
 var Body = require("js/body");
+var Loader = require("js/loader");
 
 function Animation() {
 
+
+    // basic renderer stuff
     this.scene = new THREE.Scene();
+    THREE.EventDispatcher.prototype.apply(this.scene);
+
 
     this.cam = new Cam();
 
@@ -23,50 +28,39 @@ function Animation() {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
 
 
+    // light2
     this.directionalLight = new THREE.DirectionalLight(0xffffff, 2);
     this.directionalLight.position.set(2, 1, 2 + Math.PI / 2);
     this.scene.add(this.directionalLight);
 
-    this.skybox = null;
-
-    var handle_load_func = function (texture) {
-
-        var sphere = new THREE.Mesh(
-            new THREE.SphereGeometry(2500, 32, 32),
-            new THREE.MeshBasicMaterial({
-                map: texture,
-                specularMap: texture,
-                reflectivity: 100
-            })
-        );
-        sphere.scale.x = -1;
-        sphere.scale.y = -1;
-        sphere.scale.z = -1;
+    this.directionalLight2 = new THREE.DirectionalLight(0xffffff, 2);
+    this.directionalLight2.position.set(0, 1, -2);
+    this.directionalLight2.intensity = 0.75;
+    this.scene.add(this.directionalLight2);
 
 
-        sphere.rotateX(Math.PI / 4);
+    // skybox
 
-        sphere.rotateY(-Math.PI / 2);
+    var geo = new THREE.SphereGeometry(2500, 32, 32);
+    var material = new THREE.MeshPhongMaterial({
+        map: Loader.textures["skybox"]
+        //specularMap: Loader.textures["graphics/skybox_specular.jpg"]
+    });
+    material.bumpMap = Loader.textures["skybox_bump"];
+    material.bumpScale = 4;
 
-        this.skybox = sphere;
-
-        this.scene.add(sphere);
-    }.bind(this);
-
-
-    var loader = new THREE.TextureLoader();
-
-
-    loader.load(
-        "graphics/skybox.jpg",
-        handle_load_func,
-        handle_load_func,
-        handle_load_func
-    );
+    var sphere = new THREE.Mesh(geo, material);
+    sphere.scale.x = -1;
+    sphere.scale.y = -1;
+    sphere.scale.z = -1;
 
 
-    //this.scene.rotateX(-1);
-    THREE.EventDispatcher.prototype.apply(this.scene);
+    sphere.rotateX(Math.PI / 4);
+
+    sphere.rotateY(-Math.PI / 2);
+
+    this.scene.add(sphere);
+
 
 }
 

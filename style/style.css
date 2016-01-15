@@ -22,15 +22,11 @@ dialog.body_dialog {
     margin: 0 0 0 0;
     padding: 0 0 0 0;
 
-    border: none;
-
     background-color: transparent;
-
-
-
     overflow: hidden;
-    scale(0)
+    border: 0;
 
+    scale(0)
 
 }
 
@@ -99,7 +95,15 @@ div.dialog_content_middle {
     width: 70%;
     height: 100%;
     float: left;
-    background-color: cornflowerblue;
+    background-color: #5585BD;
+
+
+    border: 0;
+    border-top: 25px solid darkblue;
+    border-bottom: 25px solid darkblue;
+
+    box-shadow: 0 2px 10px rgba(0,0,0,0.8);
+
 
 
     font-size: 150%;

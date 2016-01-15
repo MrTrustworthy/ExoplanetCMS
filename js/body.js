@@ -8,6 +8,7 @@ var Dialog = require("js/dialog");
 var Circle = require("js/circle");
 var GLOBAL_SPEED = require("js/conf").speed;
 var Text = require("js/text");
+var Loader = require("js/loader");
 /**
  *
  * @param info
@@ -25,13 +26,15 @@ function Body(info, parent) {
 
     this.geometry = new THREE.SphereGeometry(info.size, info.segments, info.segments);
 
-    this.material = new THREE.MeshLambertMaterial(
-        {
-            color: info.color,
-            wireframe: true,
-            wireframeLinewidth: Math.ceil(info.size / 100) * 10
-        }
-    );
+    this.material = new THREE.MeshPhongMaterial({
+        map: Loader.textures[info.texture]
+
+            //color: info.color,
+            //wireframe: true,
+            //wireframeLinewidth: Math.ceil(info.size / 100) * 10
+    });
+    this.material.bumpMap = Loader.textures[info.texture + "_bump"];
+    this.material.bumpScale = 20;
 
     this.mesh = new THREE.Mesh(this.geometry, this.material);
     this.mesh.userData = this;
