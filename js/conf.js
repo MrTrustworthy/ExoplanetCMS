@@ -10,12 +10,14 @@
  */
 var textures = {
     skybox: "skybox",
-    mars: "mars",
     text_texture: "text_ure",
     donjon_1: "donjon_1",
+    donjon_2: "donjon_2",
     donjon_4: "donjon_4",
     donjon_5: "donjon_5",
-    donjon_7: "donjon_7"
+    donjon_6: "donjon_6",
+    donjon_7: "donjon_7",
+    donjon_9: "donjon_9"
 };
 
 
@@ -58,7 +60,7 @@ var element_configuration = {
                     speed: -0.03,
                     segments: 5,
                     backref: null,
-                    texture: "mars",
+                    texture: "donjon_2",
                     title: "Contact",
                     content: "contact_content",
                     start_time: 0,
@@ -91,7 +93,7 @@ var element_configuration = {
                     speed: -0.175,
                     segments: 5,
                     backref: null,
-                    texture: "mars",
+                    texture: "donjon_7",
                     title: "Star CMS",
                     content: "content_starcms",
                     start_time: 5,
@@ -107,7 +109,7 @@ var element_configuration = {
                     speed: 0.05,
                     segments: 5,
                     backref: null,
-                    texture: "mars",
+                    texture: "donjon_6",
                     title: "Github",
                     content: "content_github",
                     start_time: 0,
@@ -140,7 +142,7 @@ var element_configuration = {
                     speed: -0.125,
                     segments: 5,
                     backref: null,
-                    texture: "mars",
+                    texture: "donjon_7",
                     title: "Javascript",
                     content: "javascript_content",
                     start_time: 0,
@@ -156,7 +158,7 @@ var element_configuration = {
                     speed: -0.125,
                     segments: 5,
                     backref: null,
-                    texture: "mars",
+                    texture: "donjon_6",
                     title: "Python",
                     content: "python_content",
                     start_time: 3,
@@ -172,7 +174,7 @@ var element_configuration = {
                     speed: 0.04,
                     segments: 5,
                     backref: null,
-                    texture: "mars",
+                    texture: "donjon_9",
                     title: "Frameworks",
                     content: "frameworks_content",
                     start_time: 1.1,

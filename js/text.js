@@ -7,8 +7,6 @@ var Loader = require("js/loader");
 
 var Text = function (parent) {
 
-    //this.parent_body = parent;
-
     this.cam = null;
     var height = 1;
 

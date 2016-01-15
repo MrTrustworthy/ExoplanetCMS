@@ -81,6 +81,7 @@ Dialog.prototype.generate_content = function () {
 
     var img = document.createElement("img");
     img.src = "/graphics/arrow_left.png";
+    img.className = "move_left";
 
     img.onclick = function () {
         var controller = require("js/main").controller;
@@ -112,6 +113,7 @@ Dialog.prototype.generate_content = function () {
 
         var img = document.createElement("img");
         img.src = "graphics/arrow_right.png";
+        img.className = "move_right";
         img.onclick = function () {
             require("js/main").controller.select_object(child.backref);
         };

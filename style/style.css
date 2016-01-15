@@ -1,5 +1,5 @@
 
-html,body {
+html, body {
     width: 100%;
     height: 100%;
     margin: 0 0 0 0;
@@ -14,7 +14,6 @@ canvas {
 
 dialog.body_dialog {
 
-
     top: 15%;
     left: 15%;
     width: 70%;
@@ -26,7 +25,7 @@ dialog.body_dialog {
     overflow: hidden;
     border: 0;
 
-    scale(0)
+scale(0)
 
 }
 
@@ -45,20 +44,15 @@ dialog.body_dialog {
     }
 }
 
-
 dialog.body_dialog_open {
     animation: fade_in 2s;
 }
-
-
-
 
 dialog.body_dialog_closed {
     animation-name: fade_out;
     animation-duration: 1s;
     transform: scale(0);
 }
-
 
 @keyframes fade_out {
     from {
@@ -75,6 +69,31 @@ dialog.body_dialog_closed {
     }
 }
 
+img {
+    cursor: pointer;
+}
+
+
+
+img.move_left {
+
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 0;
+    margin-left: auto;
+
+}
+
+
+
+img.move_right {
+    float: left;
+}
 
 
 
@@ -86,8 +105,25 @@ div.dialog_content_left {
     height: 100%;
     float: left;
     background-color: transparent;
-
+    position: relative;
 }
+
+
+div.dialog_content_right {
+    top: 0;
+    left: 85%;
+    width: 15%;
+    height: 100%;
+    float: left;
+    background-color: transparent;
+
+    display: flex;
+    flex-wrap: wrap;
+
+    align-items: center;
+}
+
+
 
 div.dialog_content_middle {
     top: 0;
@@ -97,14 +133,10 @@ div.dialog_content_middle {
     float: left;
     background-color: #5585BD;
 
-
     border: 0;
     border-top: 25px solid darkblue;
-    border-bottom: 25px solid darkblue;
 
-    box-shadow: 0 2px 10px rgba(0,0,0,0.8);
-
-
+    box-shadow: 0 20px 100px rgba(0, 0, 0, 0.8);
 
     font-size: 150%;
     font-family: 'Ubuntu Condensed', sans-serif;
@@ -113,19 +145,7 @@ div.dialog_content_middle {
 
 }
 
-div.dialog_content_right {
-    top: 0;
-    left: 85%;
-    width: 15%;
-    height: 100%;
-    float: left;
-    background-color: transparent;
-}
 
-
-img {
-    cursor: pointer;
-}
 
 
 

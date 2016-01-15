@@ -24,16 +24,14 @@ function Body(info, parent) {
     THREE.EventDispatcher.prototype.apply(this);
 
     // we want dem power of 2 amounts
-    var segment_amount = Math.pow(2, Math.round(Math.log((info.size / 5) + 5) / Math.log(2)));
+    var segment_amount = Math.pow(2, Math.round(Math.log((info.size / 5) + 5) / Math.log(2))) * 2;
 
+
+    // create the THREE Object
     this.geometry = new THREE.SphereGeometry(info.size, segment_amount, segment_amount);
 
     this.material = new THREE.MeshPhongMaterial({
         map: Loader.textures[info.texture]
-
-        //color: info.color,
-        //wireframe: true,
-        //wireframeLinewidth: Math.ceil(info.size / 100) * 10
     });
     this.material.bumpMap = Loader.textures[info.texture + "_bump"];
     this.material.bumpScale = 20;
@@ -53,7 +51,7 @@ function Body(info, parent) {
     // backref on info allows us to traverse the solar system
     this.info.backref = this;
 
-
+    //  don't do this for the root element
     if (this.parent) {
 
         this.parent_pos = this.parent.mesh.position;
@@ -99,8 +97,8 @@ Body.prototype.move = function () {
         })
     }
 
-    this.mesh.rotation.x += this.info.rotate_x * GLOBAL_SPEED.val;
-    this.mesh.rotation.y += this.info.rotate_y * GLOBAL_SPEED.val;
+    this.mesh.rotation.x += this.info.rotate_x * Math.max(GLOBAL_SPEED.val, GLOBAL_SPEED.min);
+    this.mesh.rotation.y += this.info.rotate_y * Math.max(GLOBAL_SPEED.val, GLOBAL_SPEED.min);
 };
 
 module.exports = Body;
