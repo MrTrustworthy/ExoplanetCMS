@@ -58,8 +58,15 @@ Dialog.prototype.close = function () {
     this.dlg.classList.remove("body_dialog_open");
     this.dlg.classList.add("body_dialog_closed");
     window.setTimeout(function () {
-        this.dlg.close();
-        deferred.resolve();
+        try {
+            this.dlg.close();
+        } catch (e) {
+            console.warn("#Dialog Error:", e);
+        } finally {
+            deferred.resolve();
+
+        }
+
     }.bind(this), 1000);
     return deferred.promise;
 };
@@ -77,7 +84,7 @@ Dialog.prototype.generate_content = function () {
 
     img.onclick = function () {
         var controller = require("js/main").controller;
-        if(this.body.parent) controller.select_object(this.body.parent);
+        if (this.body.parent) controller.select_object(this.body.parent);
         else controller.cancel_selection();
     }.bind(this);
 
@@ -104,7 +111,7 @@ Dialog.prototype.generate_content = function () {
     this.body.info.children.forEach(function (child) {
 
         var img = document.createElement("img");
-        img.src = "/graphics/arrow_right.png";
+        img.src = "graphics/arrow_right.png";
         img.onclick = function () {
             require("js/main").controller.select_object(child.backref);
         };

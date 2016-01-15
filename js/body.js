@@ -23,15 +23,17 @@ function Body(info, parent) {
     // need eventhandling to stick the dialogs
     THREE.EventDispatcher.prototype.apply(this);
 
+    // we want dem power of 2 amounts
+    var segment_amount = Math.pow(2, Math.round(Math.log((info.size / 5) + 5) / Math.log(2)));
 
-    this.geometry = new THREE.SphereGeometry(info.size, info.segments, info.segments);
+    this.geometry = new THREE.SphereGeometry(info.size, segment_amount, segment_amount);
 
     this.material = new THREE.MeshPhongMaterial({
         map: Loader.textures[info.texture]
 
-            //color: info.color,
-            //wireframe: true,
-            //wireframeLinewidth: Math.ceil(info.size / 100) * 10
+        //color: info.color,
+        //wireframe: true,
+        //wireframeLinewidth: Math.ceil(info.size / 100) * 10
     });
     this.material.bumpMap = Loader.textures[info.texture + "_bump"];
     this.material.bumpScale = 20;

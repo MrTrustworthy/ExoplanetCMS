@@ -18,8 +18,9 @@ var Text = function (parent) {
         font: 'helvetiker'
     });
 
-    var material = new THREE.MeshPhongMaterial({
-        map: Loader.textures["text_texture"]
+    var material = new THREE.MeshBasicMaterial({
+        color: 0x8FD8D8
+        //map: Loader.textures["text_texture"]
     });
 
     this.mesh = new THREE.Mesh(geometry, material);

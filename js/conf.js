@@ -11,7 +11,11 @@
 var textures = {
     skybox: "skybox",
     mars: "mars",
-    text_texture: "text_ure"
+    text_texture: "text_ure",
+    donjon_1: "donjon_1",
+    donjon_4: "donjon_4",
+    donjon_5: "donjon_5",
+    donjon_7: "donjon_7"
 };
 
 
@@ -25,7 +29,7 @@ var element_configuration = {
     speed: 0.1,
     segments: 16,
     backref: null,
-    texture: "mars",
+    texture: "donjon_7",
     title: "Home",
     content: "home_content",
     children: [
@@ -39,7 +43,7 @@ var element_configuration = {
             speed: 0.05,
             segments: 8,
             backref: null,
-            texture: "mars",
+            texture: "donjon_4",
             title: "About",
             content: "about_content",
             start_time: 5,
@@ -72,7 +76,7 @@ var element_configuration = {
             speed: 0.02,
             segments: 12,
             backref: null,
-            texture: "mars",
+            texture: "donjon_5",
             title: "Projects",
             content: "projects_content",
             start_time: 1,
@@ -121,7 +125,7 @@ var element_configuration = {
             speed: 0.01,
             segments: 12,
             backref: null,
-            texture: "mars",
+            texture: "donjon_1",
             title: "Technologies",
             content: "technologies_content",
             start_time: 3,
