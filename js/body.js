@@ -7,7 +7,7 @@ var THREE = require("js/lib/three");
 var Dialog = require("js/dialog");
 var Circle = require("js/circle");
 var GLOBAL_SPEED = require("js/conf").speed;
-
+var Text = require("js/text");
 /**
  *
  * @param info
@@ -57,6 +57,9 @@ function Body(info, parent) {
         this.radius = Math.sqrt(Math.pow(this.parent_pos.x - info.start_x, 2) + Math.pow(this.parent_pos.y - info.start_y, 2));
         this.circle = new Circle(this.radius, this.speed, info.start_time);
     }
+
+    // floating text
+    this.text = new Text(this);
 
 }
 /**

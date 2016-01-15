@@ -15,9 +15,13 @@ function Animation() {
     this.canvas = document.getElementById("main_canvas");
     this.context = this.canvas.getContext("webgl");
 
-    this.renderer = new THREE.WebGLRenderer(this.context);
+    this.renderer = new THREE.WebGLRenderer({
+        canvas: this.canvas,
+        context: this.context,
+        antialias: true
+    });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-    //this.renderer.setClearColor(0x002244, 1);
+
 
     this.directionalLight = new THREE.DirectionalLight(0xffffff, 2);
     this.directionalLight.position.set(2, 1, 2 + Math.PI / 2);
@@ -67,8 +71,10 @@ function Animation() {
 }
 
 
-Animation.prototype.add = function (obj) {
+Animation.prototype.add_body = function (obj) {
     this.scene.add(obj.mesh);
+    this.scene.add(obj.text.mesh);
+    obj.text.register_cam(this.cam);
 };
 
 

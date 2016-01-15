@@ -12,6 +12,10 @@ var Deferred = require("js/lib/mt-promise");
  */
 var Cam = function () {
 
+    THREE.EventDispatcher.prototype.apply(this);
+
+
+
     this.is_tweening = false;
     this.is_in_close_view = false;
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
@@ -44,6 +48,11 @@ Cam.prototype.scroll = function (amount) {
     this.camera.position.z = point.x; //!!
     this.camera.position.y = point.y;
     this.camera.lookAt(this.current_view_target);
+    // dispatch change message
+    this.dispatchEvent({
+        type: "cam_moved",
+        info: this
+    });
 };
 
 
@@ -181,6 +190,12 @@ Cam.prototype.tween = function (start, stop, scene) {
             this.camera.rotation.y + rotation_steps.y,
             this.camera.rotation.z + rotation_steps.z
         );
+
+        // dispatch change message
+        this.dispatchEvent({
+            type: "cam_moved",
+            info: this
+        });
 
 
         // when done
