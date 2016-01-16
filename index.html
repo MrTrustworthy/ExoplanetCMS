@@ -11,26 +11,32 @@
 <head>
     <meta charset="UTF-8">
     <title>Welcome Home</title>
-    <!--
-    <script src="three.js"></script>
-    <script src="conf.js"></script>
-    <script src="dialog.js"></script>
-    <script src="circle.js"></script>
-    <script src="body.js"></script>
-    <script src="cam.js"></script>
-    <script src="animation.js"></script>
-    <script src="controller.js"></script>
-    <script src="main.js"></script>-->
+
+    <!-- Polyfill for dialog-->
+    <link rel="stylesheet" type="text/css" href="js/lib/dialog/dialog-polyfill.css">
+
+    <script src="js/lib/dialog/dialog-polyfill.js"></script>
+
+
+
+
 
     <link href='https://fonts.googleapis.com/css?family=Ubuntu+Condensed' rel='stylesheet' type='text/css'>
     <link rel="shortcut icon" type="image/x-icon" href="graphics/favicon.ico">
-    <link rel="stylesheet" href="style/style.css">
 
+    <link rel="stylesheet" type="text/css" href="style/style.css">
+
+
+
+
+    <!-- module loader starts the app -->
     <script src="/js/lib/mt-module.js" entry="js/main" waitForDom="true"></script>
 
 
 </head>
 <body>
+
+    <progress id="load_progress"></progress>
 
     <canvas id="main_canvas"></canvas>
 
@@ -44,6 +50,36 @@
     </template>
 
 
+    <template id="home_content">
+
+    </template>
+    <template id="about_content">
+        tesssst
+    </template>
+    <template id="contact_content">
+        tesssst
+    </template>
+    <template id="projects_content">
+        tesssst
+    </template>
+    <template id="content_starcms">
+        tesssst
+    </template>
+    <template id="content_github">
+        tesssst
+    </template>
+    <template id="technologies_content">
+        tesssst
+    </template>
+    <template id="javascript_content">
+        tesssst
+    </template>
+    <template id="python_content">
+        tesssst
+    </template>
+    <template id="frameworks_content">
+        tesssst
+    </template>
 
 
 

@@ -18,6 +18,7 @@ function Animation() {
     this.cam = new Cam();
 
     this.canvas = document.getElementById("main_canvas");
+    this.canvas.style.display = "block";
     this.context = this.canvas.getContext("webgl");
 
     this.renderer = new THREE.WebGLRenderer({
@@ -62,14 +63,19 @@ function Animation() {
 
 }
 
-
+/**
+ *
+ * @param obj
+ */
 Animation.prototype.add_body = function (obj) {
     this.scene.add(obj.mesh);
     this.scene.add(obj.text.mesh);
     obj.text.register_cam(this.cam);
 };
 
-
+/**
+ *
+ */
 Animation.prototype.start = function start() {
 
     requestAnimationFrame(this.start.bind(this));

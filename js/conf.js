@@ -77,8 +77,8 @@ var element_configuration = {
         {
             start_x: 425,
             start_y: 0,
-            rotate_x: 0.13,
-            rotate_y: -0.08,
+            rotate_x: 0.0,
+            rotate_y: -0.1,
             color: 0x53ff8f,
             size: 40,
             speed: 0.02,
@@ -200,7 +200,7 @@ var element_configuration = {
 };
 
 
-var GLOBAL_SPEED = {
+var speed = {
     val: 0.3,
     max: 0.3,
     min: 0.0075,
@@ -210,6 +210,6 @@ var GLOBAL_SPEED = {
 
 module.exports = {
     elements: element_configuration,
-    speed: GLOBAL_SPEED,
+    speed: speed,
     textures: textures
 };

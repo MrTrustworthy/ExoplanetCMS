@@ -179,7 +179,7 @@ void main( void ) {
 `;
 
 /**
- *
+ * @returns Promise
  */
 Body.prototype.show_dialog = function () {
     if (!this.dialog) this.dialog = new Dialog(this);
@@ -187,11 +187,10 @@ Body.prototype.show_dialog = function () {
 };
 
 /**
- *
+ * @returns Promise
  */
 Body.prototype.hide_dialog = function () {
     return this.dialog.close();
-
 };
 
 /**

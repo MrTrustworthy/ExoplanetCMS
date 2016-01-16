@@ -3,14 +3,24 @@
  */
 
 
+// start loading bar first
+
+var loading_bar = document.getElementById("load_progress");
+loading_bar.max = 100;
+loading_bar.value = 10;
+
+
 var Animation = require("js/animation");
 var conf = require("js/conf");
 var Body = require("js/body");
 var Controller = require("js/controller");
 var Loader = require("js/loader");
 
+loading_bar.value += 10;
 
 var App = function(){
+
+    var load_steps = (loading_bar.max - loading_bar.value) / (Object.keys(conf.textures).length  * 2);
 
 
 
@@ -31,6 +41,8 @@ var App = function(){
 
         })(conf.elements, null);
 
+        loading_bar.style.display = "none";
+
         animation.start();
 
 
@@ -40,13 +52,17 @@ var App = function(){
 
 
 
-    }.bind(this));
+    }.bind(this), function(err){
+        console.error("#Main: Error while loading, aborting application start");
+    }, function(){
+        loading_bar.value += load_steps;
+    });
 
 };
 
 
 var app = new App();
-window.app = app;
+window.app = app; // debug helper
 
 
 module.exports = app;

@@ -34,6 +34,7 @@ Loader.prototype.load_textures = function(url_dict){
             function(texture){
                 textures[key] = texture;
                 i--;
+                deferred.update();
                 if(i === 0) deferred.resolve();
             },
             function(){},
@@ -41,6 +42,7 @@ Loader.prototype.load_textures = function(url_dict){
                 console.error("#Loader: couldn't load texture", url);
                 textures[key] = err;
                 i--;
+                deferred.update();
                 if(i === 0) deferred.resolve();
             }
         );
@@ -57,6 +59,7 @@ Loader.prototype.load_textures = function(url_dict){
             function(texture){
                 textures[key_bump] = texture;
                 i--;
+                deferred.update();
                 if(i === 0) deferred.resolve();
             },
             function(){},
@@ -64,6 +67,7 @@ Loader.prototype.load_textures = function(url_dict){
                 console.error("#Loader: couldn't load texture", url_bump);
                 textures[key_bump] = err;
                 i--;
+                deferred.update();
                 if(i === 0) deferred.resolve();
             }
         );

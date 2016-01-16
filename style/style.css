@@ -9,7 +9,8 @@ html, body {
 canvas {
     width: 100%;
     height: 100%;
-    display: block;
+    display: none;
+
 }
 
 dialog.body_dialog {
@@ -45,7 +46,7 @@ scale(0)
 }
 
 dialog.body_dialog_open {
-    animation: fade_in 2s;
+    animation: fade_in 1s;
 }
 
 dialog.body_dialog_closed {
@@ -69,14 +70,9 @@ dialog.body_dialog_closed {
     }
 }
 
-img {
-    cursor: pointer;
-}
-
-
 
 img.move_left {
-
+    cursor: pointer;
     position: absolute;
     top: 0;
     bottom: 0;
@@ -92,6 +88,7 @@ img.move_left {
 
 
 img.move_right {
+    cursor: pointer;
     float: left;
 }
 
@@ -141,8 +138,21 @@ div.dialog_content_middle {
     font-size: 150%;
     font-family: 'Ubuntu Condensed', sans-serif;
     text-align: center;
-    opacity: 0.9
+    opacity: 0.92;
+    overflow: auto;
 
+}
+
+progress {
+    left: 50%;
+    top: 50%;
+    width: 99%;
+
+    border: 2px solid darkblue;
+
+    background-color: #f3f3f3;
+    height: 18px;
+    border-radius: 9px;
 }
 
 

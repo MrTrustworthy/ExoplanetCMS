@@ -5,7 +5,7 @@
 var Deferred = require("js/lib/mt-promise");
 /**
  *
- * @param content
+ * @param body
  * @constructor
  */
 var Dialog = function (body) {
@@ -16,10 +16,18 @@ var Dialog = function (body) {
 
     // generate dialog element based on the HTML-template
     var dialog_template = document.getElementById("dialog_template").content;
+
+
+    // so we can find it later on if another dialog has been opened before
     dialog_template.firstElementChild.id = dialog_id;
     document.body.appendChild(document.importNode(dialog_template, true));
 
     this.dlg = document.getElementById(dialog_id);
+
+    // #POLYFILL#
+    dialogPolyfill.registerDialog(this.dlg);
+    // #POLYFILL_END#
+
     this.generate_content();
 
     // cancel on rightclick
@@ -31,7 +39,7 @@ var Dialog = function (body) {
 };
 
 
-Dialog.FADE_IN_TIME = 2; // in seconds - needs to be the same as the animation in the .css
+Dialog.FADE_IN_TIME = 1; // in seconds - needs to be the same as the animation in the .css
 Dialog.FADE_OUT_TIME = 1;
 
 /**
@@ -101,7 +109,7 @@ Dialog.prototype.generate_content = function () {
     center_box.appendChild(header);
 
     var content = document.createElement("p");
-    content.innerHTML = this.body.info.content;
+    content.innerHTML = document.getElementById(this.body.info.content).innerHTML;
     center_box.appendChild(content);
 
     /**
