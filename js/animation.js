@@ -60,7 +60,6 @@ function Animation() {
 
     this.scene.add(sphere);
 
-
 }
 
 

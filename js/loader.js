@@ -26,7 +26,8 @@ Loader.prototype.load_textures = function(url_dict){
     keys.forEach(function(key){
 
         // load normal textures first
-        var url = base_url + url_dict[key] + ".jpg";
+        var url = base_url + url_dict[key];
+        if(!url.includes(".")) url += ".jpg";
 
         loader.load(
             url,
@@ -46,8 +47,10 @@ Loader.prototype.load_textures = function(url_dict){
 
         // then bumpmaps
 
-        var key_bump = url_dict[key] + "_bump";
-        var url_bump = base_url + key_bump + ".jpg";
+        var key_bump = key + "_bump";
+        var url_bump = base_url + url_dict[key] + "_bump";
+        if(!url_bump.includes(".")) url_bump += ".jpg";
+
 
         loader.load(
             url_bump,

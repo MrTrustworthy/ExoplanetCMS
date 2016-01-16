@@ -37,7 +37,12 @@ function Body(info, parent, scene) {
     // create the THREE Object
     this.geometry = new THREE.SphereBufferGeometry(info.size, segment_amount, segment_amount);
 
-    this.material = this._create_material(info.texture, scene);
+    if(info.custom_shader){
+        this.material = this._create_shader_material(info.texture, scene);
+    }else{
+        this.material = this._create_material(info.texture);
+    }
+
 
     // mesh
     this.mesh = new THREE.Mesh(this.geometry, this.material);
@@ -47,7 +52,6 @@ function Body(info, parent, scene) {
     this.mesh.position.x = info.start_x;
     this.mesh.position.y = info.start_y;
     this.mesh.rotateX(Math.PI / 2);
-
 
 
     //  don't do this for the root element
@@ -67,33 +71,40 @@ function Body(info, parent, scene) {
 
 /**
  *
- * @param texture
+ * @param texture_name
+ * @returns {THREE.MeshPhongMaterial}
+ * @private
+ */
+Body.prototype._create_material = function(texture_name){
+    var material = new THREE.MeshPhongMaterial({
+        map: Loader.textures[texture_name]
+    });
+    material.bumpMap = Loader.textures[texture_name + "_bump"];
+    material.bumpScale = 20;
+    return material
+
+};
+
+
+
+/**
+ *
+ * @param texture_name
  * @param scene
  * @returns {*}
  * @private
  */
-Body.prototype._create_material = function (texture, scene) {
-
-    if (texture !== "sun") {
-
-        var material = new THREE.MeshPhongMaterial({
-            map: Loader.textures[texture]
-        });
-        material.bumpMap = Loader.textures[texture + "_bump"];
-        material.bumpScale = 20;
-        return material
-    }
-
+Body.prototype._create_shader_material = function (texture_name, scene) {
 
     var uniforms = {
-
-        amplitude: {type: "f", value: 1.0},
-        color: {type: "c", value: new THREE.Color(0xff2200)},
-        texture: {type: "t", value: Loader.textures["lavatile"]}
+        time: {type: "f", value: 1.0},
+        texture1: {type: "t", value: Loader.textures[texture_name]},
+        texture2: {type: "t", value: Loader.textures[texture_name + "_bump"]}
 
     };
-    uniforms.texture.value.wrapS = uniforms.texture.value.wrapT = THREE.RepeatWrapping;
 
+    uniforms.texture1.value.wrapS = uniforms.texture1.value.wrapT = THREE.MirroredRepeatWrapping;
+    uniforms.texture2.value.wrapS = uniforms.texture2.value.wrapT = THREE.MirroredRepeatWrapping;
 
     var shaderMaterial = new THREE.ShaderMaterial({
         uniforms: uniforms,
@@ -101,85 +112,68 @@ Body.prototype._create_material = function (texture, scene) {
         fragmentShader: fragment_shader
     });
 
-
-    // transformations
-
-    var displacement = new Float32Array(this.geometry.attributes.position.count);
-    var noise = new Float32Array(this.geometry.attributes.position.count);
-
-    for (var i = 0; i < displacement.length; i++) {
-        noise[i] = Math.random() * 5;
-    }
-
-    this.geometry.addAttribute('displacement', new THREE.BufferAttribute(displacement, 1));
-
-    var time = 0;
     scene.addEventListener("scene_updated", function () {
-        time++;
-
-        uniforms.amplitude.value = 2.5 * Math.sin(time * 0.0125);
-        uniforms.color.value.offsetHSL(0.0005, 0, 0);
-
-        for (var i = 0; i < displacement.length; i++) {
-
-            displacement[i] = Math.sin(0.1 * i + time);
-
-            noise[i] += 0.5 * ( 0.5 - Math.random() );
-            noise[i] = THREE.Math.clamp(noise[i], -5, 5);
-
-            displacement[i] += noise[i];
-
-        }
-
-        this.geometry.attributes.displacement.needsUpdate = true;
-
-
+        uniforms.time.value += 1;
+        shaderMaterial.needsUpdate = true;
     }.bind(this));
+
 
     return shaderMaterial;
 
 
 };
 
-
 var vertex_shader = `
+uniform float time;
 
-uniform float amplitude;
-
-attribute float displacement;
-
-varying vec3 vNormal;
 varying vec2 vUv;
 
 void main() {
+    vUv = uv;
 
-    vNormal = normal;
-    vUv = ( 0.5 + amplitude ) * uv + vec2( amplitude );
+    float c = sin(time/25.0);
+    vec3 newPosition = position + normal * vec3(c);
 
-    vec3 newPosition = position + amplitude * normal * vec3( displacement );
-    gl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );
-
+    gl_Position =   projectionMatrix *
+                    modelViewMatrix *
+                    vec4(newPosition,1.0);
 }
 `;
 
+
 var fragment_shader = `
-varying vec3 vNormal;
+uniform float time;
+
+uniform sampler2D texture1;
+uniform sampler2D texture2;
+
 varying vec2 vUv;
 
-uniform vec3 color;
-uniform sampler2D texture;
+void main( void ) {
 
-void main() {
+    float progress = time / 20.0;
 
-    vec3 light = vec3( 0.5, 0.2, 1.0 );
-    light = normalize( light );
+    vec2 position = -1.0 + 2.0 * vUv;
 
-    float dProd = dot( vNormal, light ) * 0.5 + 0.5;
+    vec4 noise = texture2D( texture2, vUv );
+    vec2 T1 = vUv + vec2( 1.5, -1.5 ) * progress  *0.02;
+    vec2 T2 = vUv + vec2( -0.5, 2.0 ) * progress * 0.01;
 
-    vec4 tcolor = texture2D( texture, vUv );
-    vec4 gray = vec4( vec3( tcolor.r * 0.3 + tcolor.g * 0.59 + tcolor.b * 0.11 ), 1.0 );
+    T1.x += noise.x * 2.0;
+    T1.y += noise.y * 2.0;
+    T2.x -= noise.y * 0.2;
+    T2.y += noise.z * 0.2;
 
-    gl_FragColor = gray * vec4( vec3( dProd ) * vec3( color ), 1.0 );
+    float p = texture2D( texture2, T1 * 2.0 ).a;
+
+    vec4 color = texture2D( texture1, T2 * 2.0 );
+    vec4 temp = color * ( vec4( p, p, p, p ) * 2.0 ) + ( color * color - 0.1 );
+
+    if( temp.r > 1.0 ){ temp.bg += clamp( temp.r - 2.0, 0.0, 100.0 ); }
+    if( temp.g > 1.0 ){ temp.rb += temp.g - 1.0; }
+    if( temp.b > 1.0 ){ temp.rg += temp.b - 1.0; }
+
+    gl_FragColor = temp;
 
 }
 `;
