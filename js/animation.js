@@ -44,7 +44,6 @@ function Animation() {
     var geo = new THREE.SphereGeometry(2500, 32, 32);
     var material = new THREE.MeshPhongMaterial({
         map: Loader.textures["skybox"]
-        //specularMap: Loader.textures["graphics/skybox_specular.jpg"]
     });
     material.bumpMap = Loader.textures["skybox_bump"];
     material.bumpScale = 4;

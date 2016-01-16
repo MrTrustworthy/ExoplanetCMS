@@ -22,7 +22,7 @@ var App = function(){
 
         (function add_all_children(body_info, parent) {
 
-            var body = new Body(body_info, parent);
+            var body = new Body(body_info, parent, animation.scene);
             animation.add_body(body);
 
             body_info.children.forEach(function (child_info) {

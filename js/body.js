@@ -15,10 +15,17 @@ var Loader = require("js/loader");
  * @param parent
  * @constructor
  */
-function Body(info, parent) {
+function Body(info, parent, scene) {
 
     this.info = info;
     this.parent = parent;
+
+    // generate on demand
+    // also avoids circular dependencies
+    this.dialog = null;
+
+    // backref on info allows us to traverse the solar system
+    this.info.backref = this;
 
     // need eventhandling to stick the dialogs
     THREE.EventDispatcher.prototype.apply(this);
@@ -28,14 +35,11 @@ function Body(info, parent) {
 
 
     // create the THREE Object
-    this.geometry = new THREE.SphereGeometry(info.size, segment_amount, segment_amount);
+    this.geometry = new THREE.SphereBufferGeometry(info.size, segment_amount, segment_amount);
 
-    this.material = new THREE.MeshPhongMaterial({
-        map: Loader.textures[info.texture]
-    });
-    this.material.bumpMap = Loader.textures[info.texture + "_bump"];
-    this.material.bumpScale = 20;
+    this.material = this._create_material(info.texture, scene);
 
+    // mesh
     this.mesh = new THREE.Mesh(this.geometry, this.material);
     this.mesh.userData = this;
 
@@ -44,12 +48,7 @@ function Body(info, parent) {
     this.mesh.position.y = info.start_y;
     this.mesh.rotateX(Math.PI / 2);
 
-    // generate on demand
-    // also avoids circular dependencies
-    this.dialog = null;
 
-    // backref on info allows us to traverse the solar system
-    this.info.backref = this;
 
     //  don't do this for the root element
     if (this.parent) {
@@ -65,6 +64,126 @@ function Body(info, parent) {
     this.text = new Text(this);
 
 }
+
+/**
+ *
+ * @param texture
+ * @param scene
+ * @returns {*}
+ * @private
+ */
+Body.prototype._create_material = function (texture, scene) {
+
+    if (texture !== "sun") {
+
+        var material = new THREE.MeshPhongMaterial({
+            map: Loader.textures[texture]
+        });
+        material.bumpMap = Loader.textures[texture + "_bump"];
+        material.bumpScale = 20;
+        return material
+    }
+
+
+    var uniforms = {
+
+        amplitude: {type: "f", value: 1.0},
+        color: {type: "c", value: new THREE.Color(0xff2200)},
+        texture: {type: "t", value: Loader.textures["lavatile"]}
+
+    };
+    uniforms.texture.value.wrapS = uniforms.texture.value.wrapT = THREE.RepeatWrapping;
+
+
+    var shaderMaterial = new THREE.ShaderMaterial({
+        uniforms: uniforms,
+        vertexShader: vertex_shader,
+        fragmentShader: fragment_shader
+    });
+
+
+    // transformations
+
+    var displacement = new Float32Array(this.geometry.attributes.position.count);
+    var noise = new Float32Array(this.geometry.attributes.position.count);
+
+    for (var i = 0; i < displacement.length; i++) {
+        noise[i] = Math.random() * 5;
+    }
+
+    this.geometry.addAttribute('displacement', new THREE.BufferAttribute(displacement, 1));
+
+    var time = 0;
+    scene.addEventListener("scene_updated", function () {
+        time++;
+
+        uniforms.amplitude.value = 2.5 * Math.sin(time * 0.0125);
+        uniforms.color.value.offsetHSL(0.0005, 0, 0);
+
+        for (var i = 0; i < displacement.length; i++) {
+
+            displacement[i] = Math.sin(0.1 * i + time);
+
+            noise[i] += 0.5 * ( 0.5 - Math.random() );
+            noise[i] = THREE.Math.clamp(noise[i], -5, 5);
+
+            displacement[i] += noise[i];
+
+        }
+
+        this.geometry.attributes.displacement.needsUpdate = true;
+
+
+    }.bind(this));
+
+    return shaderMaterial;
+
+
+};
+
+
+var vertex_shader = `
+
+uniform float amplitude;
+
+attribute float displacement;
+
+varying vec3 vNormal;
+varying vec2 vUv;
+
+void main() {
+
+    vNormal = normal;
+    vUv = ( 0.5 + amplitude ) * uv + vec2( amplitude );
+
+    vec3 newPosition = position + amplitude * normal * vec3( displacement );
+    gl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );
+
+}
+`;
+
+var fragment_shader = `
+varying vec3 vNormal;
+varying vec2 vUv;
+
+uniform vec3 color;
+uniform sampler2D texture;
+
+void main() {
+
+    vec3 light = vec3( 0.5, 0.2, 1.0 );
+    light = normalize( light );
+
+    float dProd = dot( vNormal, light ) * 0.5 + 0.5;
+
+    vec4 tcolor = texture2D( texture, vUv );
+    vec4 gray = vec4( vec3( tcolor.r * 0.3 + tcolor.g * 0.59 + tcolor.b * 0.11 ), 1.0 );
+
+    gl_FragColor = gray * vec4( vec3( dProd ) * vec3( color ), 1.0 );
+
+}
+`;
+
 /**
  *
  */

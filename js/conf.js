@@ -16,7 +16,9 @@ var textures = {
     donjon_5: "donjon_5",
     donjon_6: "donjon_6",
     donjon_7: "donjon_7",
-    donjon_9: "donjon_9"
+    donjon_9: "donjon_9",
+    lavatile: "lavatile"
+
 };
 
 
@@ -30,7 +32,7 @@ var element_configuration = {
     speed: 0.1,
     segments: 16,
     backref: null,
-    texture: "donjon_7",
+    texture: "sun",
     title: "Home",
     content: "home_content",
     children: [
