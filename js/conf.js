@@ -102,8 +102,8 @@ var element_configuration = {
                     backref: null,
                     custom_shader: false,
                     texture: "donjon_7",
-                    title: "Star CMS",
-                    content: "content_starcms",
+                    title: "Exoplanet CMS",
+                    content: "content_exoplanet",
                     start_time: 5,
                     children: []
                 },
