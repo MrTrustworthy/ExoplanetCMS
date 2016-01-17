@@ -155,6 +155,9 @@ progress {
     border-radius: 9px;
 }
 
+p.text_content {
+    padding: 100px;
+}
 
 
 

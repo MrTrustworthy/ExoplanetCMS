@@ -109,6 +109,7 @@ Dialog.prototype.generate_content = function () {
     center_box.appendChild(header);
 
     var content = document.createElement("p");
+    content.className = "text_content";
     content.innerHTML = document.getElementById(this.body.info.content).innerHTML;
     center_box.appendChild(content);
 
