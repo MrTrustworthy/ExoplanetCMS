@@ -13,7 +13,8 @@ function Circle(radius, speed, current) {
     this.get_next = function (val) {
         if(val === undefined) val = this.speed * GLOBAL_SPEED.val;
         this.current += val;
-        var scale_x = window.innerWidth / window.innerHeight;
+        // correct circle width depending on the screen
+        var scale_x = Math.max(window.innerWidth / window.innerHeight, 1);
         return {
             x: this.radius * Math.cos(this.current) * scale_x,
             y: this.radius * Math.sin(this.current)
