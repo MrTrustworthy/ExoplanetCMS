@@ -1,17 +1,33 @@
-/**
- * Created by MrTrustworthy on 11.01.2016.
- */
+"use strict";
 
 var GLOBAL_SPEED = require("js/conf").speed;
 
-function Circle(radius, speed, current) {
+/**
+ * The circle object is used to determine how a body should rotate around its parent
+ */
+class Circle {
 
-    this.radius = radius;
-    this.speed = speed || 0.01;
-    this.current = current || 0;
+    /**
+     * Creates a circle object based on the current screen width.
+     * TODO: Auto-update when changing window size
+     * @param radius
+     * @param speed
+     * @param current
+     */
+    constructor(radius, speed, current) {
 
-    this.get_next = function (val) {
-        if(val === undefined) val = this.speed * GLOBAL_SPEED.val;
+        this.radius = radius;
+        this.speed = speed || 0.01;
+        this.current = current || 0;
+    }
+
+    /**
+     * Returns the next value in the circle if rotated by "val"-amount
+     * @param val
+     * @returns {{x: number, y: number}} X/Y-Position
+     */
+    get_next (val) {
+        if (val === undefined) val = this.speed * GLOBAL_SPEED.val;
         this.current += val;
         // correct circle width depending on the screen
         var scale_x = Math.max(window.innerWidth / window.innerHeight, 1);

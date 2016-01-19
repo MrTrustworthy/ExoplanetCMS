@@ -32,25 +32,24 @@ try {
 
             var animation = new Animation();
 
+            // load all planets based on the config via recursive function calls to correctly
+            // implement parent-child relationships
             (function add_all_children(body_info, parent) {
 
                 var body = new Body(body_info, parent, animation.scene);
                 animation.add_body(body);
 
-                body_info.children.forEach(function (child_info) {
-                    add_all_children(child_info, body);
-                });
+                body_info.children.forEach(info => add_all_children(info, body));
 
             })(conf.elements, null);
 
+            // hide loading bar to avoid it messing with the
             loading_bar.style.display = "none";
 
             animation.start();
 
-
+            // initialize controller, which will take over the application from then on
             this.controller = new Controller(animation);
-
-            //module.exports.controller = main_controller;
 
 
         }.bind(this), function (err) {
@@ -70,5 +69,6 @@ try {
 
 
 } catch(e){
+    console.log("#CRITICAL#", e);
     document.write("Oops, something went wrong loading the page. Please make sure you are on a current Browser and have allowed WebGL for this Website.");
 }

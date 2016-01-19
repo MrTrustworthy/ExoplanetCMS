@@ -1,137 +1,160 @@
-/**
- * Created by MrTrustworthy on 12.01.2016.
- */
+"use strict";
 
 var Deferred = require("js/lib/mt-promise");
-/**
- *
- * @param body
- * @constructor
- */
-var Dialog = function (body) {
 
-    this.body = body;
-
-    var dialog_id = this.body.info.title.replace(/[^A-Z0-9]+/ig, "_");
-
-    // generate dialog element based on the HTML-template
-    var dialog_template = document.getElementById("dialog_template").content;
-
-
-    // so we can find it later on if another dialog has been opened before
-    dialog_template.firstElementChild.id = dialog_id;
-    document.body.appendChild(document.importNode(dialog_template, true));
-
-    this.dlg = document.getElementById(dialog_id);
-
-    // #POLYFILL#
-    dialogPolyfill.registerDialog(this.dlg);
-    // #POLYFILL_END#
-
-    this.generate_content();
-
-    // cancel on rightclick
-    this.dlg.oncontextmenu = function () {
-        require("js/main").controller.cancel_selection();
-        return false;
-    };
-
-};
-
-
-Dialog.FADE_IN_TIME = 1; // in seconds - needs to be the same as the animation in the .css
-Dialog.FADE_OUT_TIME = 1;
 
 /**
- *
+ * This is a wrapper class for the dialog object that allows us to easily create and show a dialog for
+ * the bodies in our solar system. Also handles the animations and style stuff.
  */
-Dialog.prototype.show = function () {
-    var deferred = new Deferred();
-    this.dlg.show();
-    this.dlg.classList.remove("body_dialog_closed");
-    this.dlg.classList.add("body_dialog_open");
+class Dialog {
 
-    setTimeout(deferred.resolve.bind(deferred), Dialog.FADE_IN_TIME * 1000);
-
-    return deferred.promise;
-};
-
-//
-
-/**
- *
- */
-Dialog.prototype.close = function () {
-    var deferred = new Deferred();
-    this.dlg.classList.remove("body_dialog_open");
-    this.dlg.classList.add("body_dialog_closed");
-    window.setTimeout(function () {
-        try {
-            this.dlg.close();
-        } catch (e) {
-            console.warn("#Dialog Error:", e);
-        } finally {
-            deferred.resolve();
-
-        }
-
-    }.bind(this), 1000);
-    return deferred.promise;
-};
-
-Dialog.prototype.generate_content = function () {
 
     /**
-     * LEFT BOX
+     * Creates a dialog element that references the respective body
+     * @param body
      */
+    constructor(body) {
 
-    var left_box = this.dlg.querySelector(".dialog_content_left");
+        // in seconds - needs to be the same as the animation in the .css
+        // TODO: find a better way to synchronize .css animation and js tween automatically
+        this.FADE_IN_TIME = 1;
+        this.FADE_OUT_TIME = 1;
 
-    var img = document.createElement("img");
-    img.src = "/graphics/arrow_left.png";
-    img.className = "move_left";
+        this.body = body;
 
-    img.onclick = function () {
-        var controller = require("js/main").controller;
-        if (this.body.parent) controller.select_object(this.body.parent);
-        else controller.cancel_selection();
-    }.bind(this);
+        // don't want stupid dom-node-ID's if someone gives their planets stupid names
+        var dialog_id = this.body.info.title.replace(/[^A-Z0-9]+/ig, "_");
 
-    left_box.appendChild(img);
+        // generate dialog element based on the HTML-template
+        var dialog_template = document.getElementById("dialog_template").content;
 
-    /**
-     * CENTER BOX
-     */
-    var center_box = this.dlg.querySelector(".dialog_content_middle");
 
-    var header = document.createElement("h1");
-    header.innerHTML = this.body.info.title;
-    center_box.appendChild(header);
+        // so we can find it later on if another dialog has been opened before
+        dialog_template.firstElementChild.id = dialog_id;
+        document.body.appendChild(document.importNode(dialog_template, true));
 
-    var content = document.createElement("p");
-    content.className = "text_content";
-    content.innerHTML = document.getElementById(this.body.info.content).innerHTML;
-    center_box.appendChild(content);
+        this.dlg = document.getElementById(dialog_id);
 
-    /**
-     * RIGHT BOX
-     */
-    var right_box = this.dlg.querySelector(".dialog_content_right");
+        // #POLYFILL FOR THAT STUPID FIREFOX THAT DOESN'T WORK WITH DIALOG ELEMENTS#
+        // # I MEAN WTF, DIALOG ELEMENTS SHOULD HAVE BEEN IN HTML LIKE 10 YEARS AGO MAN! #
+        dialogPolyfill.registerDialog(this.dlg);
+        // #POLYFILL_END#
 
-    this.body.info.children.forEach(function (child) {
+        this.generate_content();
 
-        var img = document.createElement("img");
-        img.src = "graphics/arrow_right.png";
-        img.className = "move_right";
-        img.onclick = function () {
-            require("js/main").controller.select_object(child.backref);
+        // cancel on rightclick
+        this.dlg.oncontextmenu = function () {
+            require("js/main").controller.cancel_selection();
+            return false;
         };
 
-        right_box.appendChild(img);
+    }
 
-    }.bind(this));
 
-};
+    /**
+     * Shows the dialog.
+     *
+     * Plays the dialog-popup animation and waits X amount of time before resolving to make sure the animation has played.
+     *
+     * @returns promise - resolved when showing the dialog is done
+     */
+    show () {
+        var deferred = new Deferred();
+        this.dlg.show();
+        this.dlg.classList.remove("body_dialog_closed");
+        this.dlg.classList.add("body_dialog_open");
 
+        setTimeout(deferred.resolve.bind(deferred), this.FADE_IN_TIME * 1000);
+
+        return deferred.promise;
+    };
+
+    /**
+     * Hides the dialog.
+     *
+     * See this.show()
+     *
+     * @returns promise
+     */
+    close () {
+
+        var deferred = new Deferred();
+        this.dlg.classList.remove("body_dialog_open");
+        this.dlg.classList.add("body_dialog_closed");
+
+        window.setTimeout(function () {
+            try {
+                this.dlg.close();
+            } catch (e) {
+                console.warn("#Dialog Error:", e);
+            } finally {
+                deferred.resolve();
+
+            }
+
+        }.bind(this), this.FADE_OUT_TIME * 1000);
+
+        return deferred.promise;
+    };
+
+    /**
+     * Generates the content of this dialog based on the information in the corresponding body object
+     */
+    generate_content () {
+
+        /**
+         * LEFT BOX
+         */
+
+        var left_box = this.dlg.querySelector(".dialog_content_left");
+
+        var img = document.createElement("img");
+        img.src = "/graphics/arrow_left.png";
+        img.className = "move_left";
+
+        img.onclick = function () {
+            var controller = require("js/main").controller;
+            if (this.body.parent) controller.select_object(this.body.parent);
+            else controller.cancel_selection();
+        }.bind(this);
+
+        left_box.appendChild(img);
+
+        /**
+         * CENTER BOX
+         */
+        var center_box = this.dlg.querySelector(".dialog_content_middle");
+
+        var header = document.createElement("h1");
+        header.innerHTML = this.body.info.title;
+        center_box.appendChild(header);
+
+        var content = document.createElement("p");
+        content.className = "text_content";
+        content.innerHTML = document.getElementById(this.body.info.content).innerHTML;
+        center_box.appendChild(content);
+
+        /**
+         * RIGHT BOX
+         */
+        var right_box = this.dlg.querySelector(".dialog_content_right");
+
+        this.body.info.children.forEach(function (child) {
+
+            var img = document.createElement("img");
+            img.src = "graphics/arrow_right.png";
+            img.className = "move_right";
+            img.onclick = function () {
+                require("js/main").controller.select_object(child.backref);
+            };
+
+            right_box.appendChild(img);
+
+        }.bind(this));
+
+    }
+
+}
 
 module.exports = Dialog;

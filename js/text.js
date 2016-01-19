@@ -1,58 +1,86 @@
-/**
- * Created by MrTrustworthy on 15.01.2016.
- */
+"use strict";
 
 var THREE = require("js/lib/three");
 var Loader = require("js/loader");
 
-var Text = function (parent) {
 
-    this.cam = null;
-    var height = 1;
-
-    var geometry = new THREE.TextGeometry(parent.info.title, {
-        size: Math.floor(parent.info.size / 2),
-        height: height,
-        font: 'helvetiker'
-    });
-
-    var material = new THREE.MeshBasicMaterial({
-        color: 0x8FD8D8
-        //map: Loader.textures["text_texture"]
-    });
-
-    this.mesh = new THREE.Mesh(geometry, material);
-    this.mesh.geometry.center();
-    this.mesh.position.z += parent.info.size * 1.5 + 10;
-    this.mesh.userData = this;
-
-    this.update_parent_position({target: parent});
-    parent.addEventListener("body_moved", this.update_parent_position.bind(this));
-
-};
-
-Text.prototype.update_parent_position = function (evt) {
-    var parent = evt.target;
-    this.mesh.position.x = parent.mesh.position.x;
-    this.mesh.position.y = parent.mesh.position.y;
-
-    if (this.cam) this._update_camera_angle({target: this.cam});
-    else this.mesh.rotation.z = 0;
+/**
+ * The Text class is responsible for the floating text above the planets
+ *
+ * TODO FIXME Documentation
+ */
+class Text {
 
 
-};
+    /**
+     * Initialize a text object with a threejs-mesh based on text-geometry
+     *
+     * @param parent
+     */
+    constructor(parent) {
 
-Text.prototype.register_cam = function (cam) {
-    this.cam = cam;
-    this._update_camera_angle({target: this.cam});
-    cam.addEventListener("cam_moved", this._update_camera_angle.bind(this));
-};
+        this.cam = null;
+        var height = 1;
 
-Text.prototype._update_camera_angle = function (evt) {
+        var geometry = new THREE.TextGeometry(parent.info.title, {
+            size: Math.floor(parent.info.size / 2),
+            height: height,
+            font: 'helvetiker'
+        });
 
-    var cam = evt.target;
-    this.mesh.lookAt(cam.camera.position);
-    this.mesh.rotation.z = 0;
-};
+        var material = new THREE.MeshLambertMaterial({
+            color: 0x8FD8D8
+        });
+
+        this.mesh = new THREE.Mesh(geometry, material);
+        this.mesh.geometry.center();
+        this.mesh.position.z += parent.info.size * 1.5 + 10;
+        this.mesh.userData = this;
+
+        this.update_parent_position({target: parent});
+        parent.addEventListener("body_moved", this.update_parent_position.bind(this));
+
+    }
+
+
+    /**
+     *
+     * @param evt - evt.target is the corresponding body object
+     */
+    update_parent_position(evt) {
+        var parent = evt.target;
+        this.mesh.position.x = parent.mesh.position.x;
+        this.mesh.position.y = parent.mesh.position.y;
+
+        if (this.cam) this._update_camera_angle({target: this.cam});
+        else this.mesh.rotation.z = 0;
+
+
+    };
+
+
+    /**
+     *
+     * @param cam
+     */
+    register_cam(cam) {
+        this.cam = cam;
+        this._update_camera_angle({target: this.cam});
+        cam.addEventListener("cam_moved", this._update_camera_angle.bind(this));
+    };
+
+    /**
+     * Internal function that gets called everytime the camera moves
+     * @param evt - the event gets emitted by the cam, so the target is the cam object
+     * @private
+     */
+    _update_camera_angle(evt) {
+
+        var cam = evt.target;
+        this.mesh.lookAt(cam.camera.position);
+        this.mesh.rotation.z = 0;
+    };
+
+}
 
 module.exports = Text;
