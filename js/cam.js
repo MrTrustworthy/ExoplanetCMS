@@ -14,13 +14,19 @@ class Cam {
         // need eventhandling to send "cam_moved" event
         THREE.EventDispatcher.prototype.apply(this);
 
+        // booleans needed by the controller to determine what to do
         this.is_tweening = false;
         this.is_in_close_view = false;
+
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
 
+        // camera rotation arc, we'll use that amount for vertical values instead of horizontal ones like bodies do
         this.circle = new Circle(1000, 0, -0.9);
 
+        // static variable so we can always look-at the origin point without having to create new Vectors
         this.ORIGIN = new THREE.Vector3(0, 0, 0);
+
+        // those two are needed for tweening
         this.current_view_target = this.ORIGIN;
         this.new_view_target = null;
 

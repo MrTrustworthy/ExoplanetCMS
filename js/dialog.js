@@ -49,6 +49,11 @@ class Dialog {
             return false;
         };
 
+        // flag to indicate whether we're in the middle of an animation
+        // need this to block new animations while the old ones are still running
+        this._is_animating = false;
+
+
     }
 
 
@@ -59,16 +64,30 @@ class Dialog {
      *
      * @returns promise - resolved when showing the dialog is done
      */
-    show () {
+    show() {
         var deferred = new Deferred();
+
+        if (this._is_animating) {
+            deferred.reject();
+            return deferred.promise;
+        }
+
         this.dlg.show();
+
         this.dlg.classList.remove("body_dialog_closed");
         this.dlg.classList.add("body_dialog_open");
 
-        setTimeout(deferred.resolve.bind(deferred), this.FADE_IN_TIME * 1000);
+        this._is_animating = true;
+
+        setTimeout(function () {
+            this._is_animating = false;
+            deferred.resolve();
+        }.bind(this), this.FADE_IN_TIME * 1000);
 
         return deferred.promise;
-    };
+    }
+
+;
 
     /**
      * Hides the dialog.
@@ -77,31 +96,37 @@ class Dialog {
      *
      * @returns promise
      */
-    close () {
+    close() {
 
         var deferred = new Deferred();
+
+        if (this._is_animating) {
+            deferred.reject();
+            return deferred.promise;
+        }
+
         this.dlg.classList.remove("body_dialog_open");
         this.dlg.classList.add("body_dialog_closed");
 
-        window.setTimeout(function () {
-            try {
-                this.dlg.close();
-            } catch (e) {
-                console.warn("#Dialog Error:", e);
-            } finally {
-                deferred.resolve();
+        this._is_animating = true;
 
-            }
+        window.setTimeout(function () {
+
+            this._is_animating = false;
+            this.dlg.close();
+            deferred.resolve();
 
         }.bind(this), this.FADE_OUT_TIME * 1000);
 
         return deferred.promise;
-    };
+    }
+
+;
 
     /**
      * Generates the content of this dialog based on the information in the corresponding body object
      */
-    generate_content () {
+    generate_content() {
 
         /**
          * LEFT BOX

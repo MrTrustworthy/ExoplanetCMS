@@ -7,7 +7,6 @@ var Loader = require("js/loader");
 /**
  * The Text class is responsible for the floating text above the planets
  *
- * TODO FIXME Documentation
  */
 class Text {
 
@@ -44,6 +43,7 @@ class Text {
 
 
     /**
+     * Gets called when the parent body moves and adapts the texts position to the parent position.
      *
      * @param evt - evt.target is the corresponding body object
      */
@@ -60,6 +60,7 @@ class Text {
 
 
     /**
+     * Registers a camera for this text so the text can always face it
      *
      * @param cam
      */
@@ -71,6 +72,7 @@ class Text {
 
     /**
      * Internal function that gets called everytime the camera moves
+     *
      * @param evt - the event gets emitted by the cam, so the target is the cam object
      * @private
      */
